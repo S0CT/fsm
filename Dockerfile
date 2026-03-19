@@ -14,7 +14,7 @@ FROM debian:bookworm-slim
 ARG PUID=1000
 ARG PGID=1000
 
-RUN apt-get update && apt-get install -y ca-certificates xz-utils && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y ca-certificates xz-utils gosu && rm -rf /var/lib/apt/lists/*
 
 RUN addgroup --gid $PGID fsm && \
     adduser --disabled-password --gecos "" --uid $PUID --ingroup fsm fsm
@@ -22,7 +22,6 @@ RUN addgroup --gid $PGID fsm && \
 WORKDIR /app
 
 RUN chown -R fsm:fsm /app
-USER fsm
 
 
 COPY --from=backend-builder /app/fsm .
@@ -30,4 +29,8 @@ COPY --from=backend-builder /app/frontend/dist ./frontend/dist
 # Unraid Optimization
 EXPOSE 8888 27015 34197/udp
 
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
+ENTRYPOINT ["/app/entrypoint.sh"]
 CMD ["./fsm"]
