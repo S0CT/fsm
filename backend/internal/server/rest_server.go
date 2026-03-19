@@ -24,13 +24,21 @@ func CreateRestServer(cfg *config.FSMConfig) *RestServer {
 
 	if len(cfg.Admins) == 0 {
 		log.Println("No server admins, creating")
-		if password, hashedPassword, err := auth.GenerateRandomPassword(8); err != nil {
-			log.Panicf("unable to generate password: %w", err)
-			os.Exit(1)
-		} else {
-			cfg.Admins["admin"] = hashedPassword
+		envPass := os.Getenv("FSM_ADMIN_PASSWORD")
+		if envPass != "" {
+			hashedSecret, _ := auth.HashPassword(envPass)
+			cfg.Admins["admin"] = hashedSecret
 			cfg.SaveToFile()
-			log.Printf("admin user created. login with admin/%s", password)
+			log.Printf("admin user created. login with admin and your Unraid configured password")
+		} else {
+			if password, hashedPassword, err := auth.GenerateRandomPassword(8); err != nil {
+				log.Panicf("unable to generate password: %v", err)
+				os.Exit(1)
+			} else {
+				cfg.Admins["admin"] = hashedPassword
+				cfg.SaveToFile()
+				log.Printf("admin user created. login with admin/%s", password)
+			}
 		}
 	}
 
