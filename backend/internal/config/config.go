@@ -124,6 +124,22 @@ func Load(configPath *string) (error, *FSMConfig) {
 		file:     cfg,
 	}
 
+	// Auto-create required Factorio directories if they do not exist
+	dirs := []string{
+		fsmConfig.Factorio.ConfigDir,
+		fsmConfig.Factorio.Downloads,
+		fsmConfig.Factorio.LogsDir,
+		fsmConfig.Factorio.ModsDir,
+		fsmConfig.Factorio.SavesDir,
+		fsmConfig.Factorio.ServerVersions,
+		filepath.Dir(fsmConfig.Factorio.Files.AdminList),
+	}
+	for _, d := range dirs {
+		if d != "" {
+			os.MkdirAll(d, 0755)
+		}
+	}
+
 	return nil, &fsmConfig
 }
 
