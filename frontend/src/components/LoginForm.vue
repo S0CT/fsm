@@ -34,8 +34,8 @@ const username = ref('')
 const password = ref('')
 
 const onFormSubmit = async () => {
-  localStorage.setItem('username', username.value)
-  localStorage.setItem('password', password.value)
+  localStorage.setItem('username', username.value.trim())
+  localStorage.setItem('password', password.value.trim())
   emit('login')
   username.value = ''
   password.value = ''

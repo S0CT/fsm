@@ -123,6 +123,7 @@ const logout = () => {
 const login = () => {
   updateStatus()
   username.value = localStorage.getItem('username') || ''
+  if (statusIntervalId) clearInterval(statusIntervalId)
   statusIntervalId = setInterval(updateStatus, 5000)
 }
 
