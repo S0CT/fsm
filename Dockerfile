@@ -22,7 +22,6 @@ RUN addgroup --gid $PGID fsm && \
 WORKDIR /app
 
 RUN chown -R fsm:fsm /app
-USER fsm
 
 
 COPY --from=backend-builder /app/fsm .
