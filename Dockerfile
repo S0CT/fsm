@@ -27,8 +27,7 @@ USER fsm
 
 COPY --from=backend-builder /app/fsm .
 COPY --from=backend-builder /app/frontend/dist ./frontend/dist
-# Unraid Optimization: fsm.ini mapped to root for discovery
-RUN ln -s /fsm.ini /app/fsm.ini
+# Unraid Optimization
 EXPOSE 8888 27015 34197/udp
 
 CMD ["./fsm"]

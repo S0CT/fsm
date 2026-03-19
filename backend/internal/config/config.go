@@ -171,15 +171,48 @@ func findConfigPath(cliPath string) string {
 		return cliPath
 	}
 	paths := []string{
-		"/fsm.ini", // Unraid Optimization: Check root mapped path first
+		"/data/fsm.ini", // Zero-Config Unraid Mapping
+		"/fsm.ini", // Legacy root mapped path
 		"./fsm.ini",
 		filepath.Join(os.Getenv("HOME"), ".config/fsm/fsm.ini"),
 		"/etc/fsm/fsm.ini",
 	}
 	for _, path := range paths {
-		if _, err := os.Stat(path); err == nil {
+		if stat, err := os.Stat(path); err == nil && !stat.IsDir() {
 			return path
 		}
 	}
-	return ""
+
+	// Zero-Config Auto-generation
+	genPath := "./fsm.ini"
+	if stat, err := os.Stat("/data"); err == nil && stat.IsDir() {
+		genPath = "/data/fsm.ini" // Generate securely inside the Docker volume
+	}
+
+	defaultConfig := `[factorio]
+auto_start      = false
+config          = /data/config
+mods            = /data/mods
+bind            = 0.0.0.0:34197
+saves           = /data/saves
+logs            = /data/logs
+downloads       = /data/downloads
+server_versions = /data/servers
+username        =
+token           =
+
+[rcon]
+bind     = 0.0.0.0:27015 ; Unraid Optimization: Bind to all interfaces for Docker
+password = ChangeMe
+
+[server]
+listen = :8888 ; Unraid Optimization: Default to 8888
+`
+	if err := os.WriteFile(genPath, []byte(defaultConfig), 0644); err != nil {
+		log.Println("Could not write Zero-Config default file to", genPath, ":", err)
+	} else {
+		log.Println("Zero-Config automatically generated default settings at", genPath)
+	}
+
+	return genPath
 }

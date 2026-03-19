@@ -9,7 +9,6 @@ services:
       - "27015:27015"         # RCON port
     volumes:
       - ./data:/data             # Unraid Optimization: Factorio config files
-      - ./fsm.ini:/fsm.ini       # Main FSM configuration
     environment:
       # - PUID=1000
       # - PGID=1000
