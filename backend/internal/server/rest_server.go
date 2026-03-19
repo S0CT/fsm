@@ -24,7 +24,7 @@ func CreateRestServer(cfg *config.FSMConfig) *RestServer {
 
 	if len(cfg.Admins) == 0 {
 		log.Println("No server admins, creating")
-		envPass := os.Getenv("FSM_ADMIN_PASSWORD")
+		envPass := strings.TrimSpace(os.Getenv("FSM_ADMIN_PASSWORD"))
 		if envPass != "" {
 			hashedSecret, _ := auth.HashPassword(envPass)
 			cfg.Admins["admin"] = hashedSecret
