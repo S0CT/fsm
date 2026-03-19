@@ -133,11 +133,18 @@ func (s *RestServer) withAuth(next http.HandlerFunc) http.HandlerFunc {
 		}
 
 		username, password, ok := r.BasicAuth()
-		if !ok || !auth.CheckPassword(s.fsmConfig.Admins[username], password) {
+
+		log.Printf("DEBUG AUTH: received username='%s', password_len=%d, basic_auth_ok=%v", username, len(password), ok)
+		storedHash := s.fsmConfig.Admins[username]
+		log.Printf("DEBUG AUTH: stored_hash_exists=%v, stored_hash_length=%d", storedHash != "", len(storedHash))
+
+		if !ok || !auth.CheckPassword(storedHash, password) {
+			log.Printf("DEBUG AUTH: Auth failed. CheckPassword evaluation returned false")
 			w.Header().Set("WWW-Authenticate", `Basic realm="restricted"`)
 			http.Error(w, "", http.StatusUnauthorized)
 			return
 		}
+		log.Printf("DEBUG AUTH: Auth fully succeeded for user '%s'", username)
 		next(w, r)
 	}
 }
