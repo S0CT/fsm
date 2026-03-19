@@ -79,6 +79,14 @@ func Load(configPath *string) (error, *FSMConfig) {
 		return fmt.Errorf("failed to load [factorio]: %w", err), nil
 	}
 
+	// Environment variable overrides (useful for Unraid / Docker integration)
+	if envUsername := os.Getenv("FACTORIO_USERNAME"); envUsername != "" {
+		factorioConfig.Username = envUsername
+	}
+	if envToken := os.Getenv("FACTORIO_TOKEN"); envToken != "" {
+		factorioConfig.Token = envToken
+	}
+
 	factorioConfig.Files = FactorioFiles{
 		AdminList:      fmt.Sprintf("%s/server-adminlist.json", factorioConfig.ConfigDir),
 		BanList:        fmt.Sprintf("%s/server-banlist.json", factorioConfig.ConfigDir),
@@ -97,7 +105,7 @@ func Load(configPath *string) (error, *FSMConfig) {
 
 	var serverConfig ServerConfig
 	if err := cfg.Section("server").MapTo(&serverConfig); err != nil {
-		serverConfig.Listen = ":8080"
+		serverConfig.Listen = ":8888" // Unraid Optimization: Default to 8888
 	}
 
 	admins := map[string]string{}
@@ -147,6 +155,7 @@ func findConfigPath(cliPath string) string {
 		return cliPath
 	}
 	paths := []string{
+		"/fsm.ini", // Unraid Optimization: Check root mapped path first
 		"./fsm.ini",
 		filepath.Join(os.Getenv("HOME"), ".config/fsm/fsm.ini"),
 		"/etc/fsm/fsm.ini",

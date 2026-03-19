@@ -52,7 +52,7 @@ go build -o fsm
 ./fsm
 ```
 
-Then open your browser to [http://localhost:8080](http://localhost:8080)
+Then open your browser to [http://localhost:8888](http://localhost:8888)
 
 ---
 
@@ -81,12 +81,14 @@ bind        = 127.0.0.1:27015
 password    = secret
 
 [server]
-listen = :8080
+listen = :8888
 ```
 
 ---
 
-## Docker
+## Docker & Unraid
+<!-- Unraid Optimization: Included support natively -->
+FSM includes optimizations specifically for Unraid Docker environments. An `unraid-template.xml` is provided in the repository, and the Docker container is pre-configured to handle Unraid's default paths (`/data`, `/fsm.ini`) and WebUI port (`8888`).
 
 ### Building
 
@@ -97,7 +99,7 @@ listen = :8080
 #### Initial setup
 
 
-* Use the setup script `curl -fsSL https://raw.githubusercontent.com/snarf-dev/fsm/refs/heads/main/setup-fsm.sh | bash`
+* Use the setup script `curl -fsSL https://raw.githubusercontent.com/S0CT/fsm/refs/heads/main/setup-fsm.sh | bash`
 * Edit docker-compose.yml if your port preferences are different
 * Edit fsm.ini and change the RCon password the other settings shouldn't need to be changed and they can be changed in the UI.
 * `docker compose up`
