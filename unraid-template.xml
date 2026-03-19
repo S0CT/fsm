@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <Container version="2">
   <Name>fsm</Name>
-  <Repository>S0CT/fsm</Repository>
-  <Registry>https://hub.docker.com/r/S0CT/fsm/</Registry>
+  <Repository>s0ct/fsm</Repository>
+  <Registry>https://hub.docker.com/r/s0ct/fsm/</Registry>
   <Network>bridge</Network>
   <MyIP/>
   <Shell>sh</Shell>

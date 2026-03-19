@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   fsm:
-    image: S0CT/fsm:latest
+    image: s0ct/fsm:latest
     ports:
       - "8888:8888"           # Expose the FSM web UI (Unraid Optimization)
       - "34197:34197/udp"     # Factorio game port (if needed)

@@ -29,4 +29,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: S0CT/fsm:latest
+          tags: s0ct/fsm:latest
